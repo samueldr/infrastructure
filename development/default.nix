@@ -84,6 +84,7 @@ in
              ]}]}
       ].
     '';
+    listenAddress = "0.0.0.0";
   };
 
   networking.hostName = lib.mkForce "${hostname}.borg";
