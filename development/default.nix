@@ -17,6 +17,7 @@ in
     ./local.nix
     # FIXME : do not copy standard.nix but upstream the needed fixes.
     ./standard.nix
+    ./webhook
   ]
   );
 
