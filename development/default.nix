@@ -67,19 +67,23 @@ in
   # Eh, development environment
   networking.firewall.enable = lib.mkForce false;
   services.rabbitmq = {
-    #config = lib.mkForce
-    #''
-    #  [
-    #    {rabbit, [
-    #      {tcp_listen_options, [
-    #        {keepalive, true}]},
-    #      {heartbeat, 10},
-    #      {listeners, [{"::", 5671}]},
-    #      {log_levels, [{connection, debug}]}
-    #    ]},
-    #    {rabbitmq_management, [{listener, [{port, 15672}]}]}
-    #  ].
-    #'';
+    config = lib.mkForce
+    ''
+      [
+        {rabbit, [
+          {tcp_listen_options, [
+            {keepalive, true}]},
+          {heartbeat, 10},
+          {listeners, [{"::", 5671}]},
+          {log_levels, [{connection, debug}]}
+        ]},
+        {rabbitmq_management, [{listener, [{port, 15672}]}]},
+        {rabbitmq_web_stomp,
+                 [{tcp_config, [{port,       15671},
+                  {backlog,    1024}
+             ]}]}
+      ].
+    '';
   };
 
   networking.hostName = lib.mkForce "${hostname}.borg";
