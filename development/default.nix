@@ -2,6 +2,7 @@
 let
   #cfg = config;
   cfg = config.services.ofborg;
+  hostname = "development";
 in
 {
   #nix.gc_free_gb = 1;
@@ -62,4 +63,18 @@ in
     #  ].
     #'';
   };
+
+  networking.hostName = lib.mkForce "${hostname}.borg";
+
+  networking.extraHosts = ''
+     127.0.0.1 ${hostname}
+     127.0.0.1 ${hostname}.local
+     127.0.0.1 ${hostname}.borg
+     127.0.0.1 ${cfg.rabbitmq.domain}
+     127.0.0.1 ${cfg.monitoring.domain}
+     127.0.0.1 ${cfg.webhook.domain}
+     127.0.0.1 ${cfg.website.domain}
+     127.0.0.1 ${cfg.log-viewer.domain}
+  ''; 
+
 }
