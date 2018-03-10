@@ -1,6 +1,7 @@
 { pkgs, config, lib, ... }:
 let
   cfg = config.services.ofborg.rabbitmq;
+  enableACME = config.services.nginx.virtualHosts."${cfg.domain}".enableACME;
 in {
   options = {
     services.ofborg.rabbitmq = {
@@ -26,7 +27,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    security.acme.certs."${cfg.domain}" = {
+    security.acme.certs."${cfg.domain}" = lib.mkIf enableACME {
       plugins = [ "cert.pem" "fullchain.pem" "full.pem" "key.pem" "account_key.json" ];
       group = "rabbitmq";
       allowKeysForGroup = true;
