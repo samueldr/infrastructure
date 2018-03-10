@@ -23,10 +23,39 @@ cd /vagrant/
 # which includes the vagrant bits in which we are overriding a small bit.
 nix-shell --run "NIX_PATH='$NIX_PATH:nix-config=/etc/nixos/configuration.nix' sudo nixos-rebuild switch --show-trace"
 
+#
+# RabbitMQ
+# --------
+#
+
+_mqctl() {
+	RABBITMQ_USE_LONGNAME=true HOME=/var/lib/rabbitmq rabbitmqctl "$@"
+}
+
+vhost="ofborg"
+
 # Creates admin user...
 (
-RABBITMQ_USE_LONGNAME=true HOME=/var/lib/rabbitmq rabbitmqctl add_user admin admin
-RABBITMQ_USE_LONGNAME=true HOME=/var/lib/rabbitmq rabbitmqctl set_user_tags admin administrator
-RABBITMQ_USE_LONGNAME=true HOME=/var/lib/rabbitmq rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
+_mqctl add_user admin admin || :
+_mqctl set_user_tags admin administrator
+_mqctl set_permissions -p / admin ".*" ".*" ".*"
 ) || :
-# Without failing (e.g. it already exists).
+
+# Creates the vhost...
+(
+_mqctl add_vhost "$vhost"
+) || :
+
+# TODO : configure ACL like rabbitmq.tf does.
+create_user() {
+	user="$1"
+
+	_mqctl add_user "$user" "$user" || :
+	_mqctl set_permissions -p "$vhost" "$user" ".*" ".*" ".*"
+}
+
+create_user "management"
+create_user "monitoring"
+create_user "webhook"
+create_user "ofborgservice"
+create_user "logviewer"

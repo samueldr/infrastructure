@@ -13,6 +13,8 @@ Vagrant.configure("2") do |config|
 
 	# rabbitmq (?)
 	[
+		5671,
+		5672,
 		15671,
 		15672,
 		15674,

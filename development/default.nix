@@ -74,7 +74,6 @@ in
           {tcp_listen_options, [
             {keepalive, true}]},
           {heartbeat, 10},
-          {listeners, [{"::", 5671}]},
           {log_levels, [{connection, debug}]}
         ]},
         {rabbitmq_management, [{listener, [{port, 15672}]}]},
