@@ -26,25 +26,41 @@ in
 
   services.nginx = {
     #enable = true;
-    virtualHosts."${cfg.rabbitmq.domain}" =  {
-      enableACME = lib.mkForce false;
-      forceSSL = lib.mkForce false;
-    };
-    virtualHosts."${cfg.monitoring.domain}" =  {
-      enableACME = lib.mkForce false;
-      forceSSL = lib.mkForce false;
-    };
-    virtualHosts."${cfg.webhook.domain}" =  {
-      enableACME = lib.mkForce false;
-      forceSSL = lib.mkForce false;
-    };
-    virtualHosts."${cfg.website.domain}" =  {
-      enableACME = lib.mkForce false;
-      forceSSL = lib.mkForce false;
-    };
-    virtualHosts."${cfg.log-viewer.domain}" =  {
-      enableACME = lib.mkForce false;
-      forceSSL = lib.mkForce false;
+    virtualHosts = {
+      "000-default" = {
+        default = true;
+        root = "/vagrant/development/webroot";
+        locations = {
+          # Proxies to the proper domain.
+          "/log-viewer/" = { proxyPass = "http://${cfg.log-viewer.domain}/"; };
+          "/monitoring/" = { proxyPass = "http://${cfg.monitoring.domain}/"; };
+          "/webhook/" = { proxyPass = "http://${cfg.webhook.domain}/"; };
+          "/website/" = { proxyPass = "http://${cfg.website.domain}/"; };
+
+          # Proxies to port 15672.
+          "/rabbitmq/" = { proxyPass = "http://${cfg.rabbitmq.domain}:15672/"; };
+        };
+      };
+      "${cfg.rabbitmq.domain}" =  {
+        enableACME = lib.mkForce false;
+        forceSSL = lib.mkForce false;
+      };
+      "${cfg.monitoring.domain}" =  {
+        enableACME = lib.mkForce false;
+        forceSSL = lib.mkForce false;
+      };
+      "${cfg.webhook.domain}" =  {
+        enableACME = lib.mkForce false;
+        forceSSL = lib.mkForce false;
+      };
+      "${cfg.website.domain}" =  {
+        enableACME = lib.mkForce false;
+        forceSSL = lib.mkForce false;
+      };
+      "${cfg.log-viewer.domain}" =  {
+        enableACME = lib.mkForce false;
+        forceSSL = lib.mkForce false;
+      };
     };
   };
 

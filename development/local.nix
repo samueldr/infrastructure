@@ -19,7 +19,7 @@ in {
 
   services.ofborg.rabbitmq = {
     cookie = "sweet-insecurity";
-    domain = "localhost";
+    domain = "rabbitmq.borg";
     monitoring_username = "monitoring";
     monitoring_password = "monitoring";
   };
