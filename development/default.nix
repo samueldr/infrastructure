@@ -64,6 +64,8 @@ in
     };
   };
 
+  # Eh, development environment
+  networking.firewall.enable = lib.mkForce false;
   services.rabbitmq = {
     #config = lib.mkForce
     #''
